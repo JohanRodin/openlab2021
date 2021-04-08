@@ -1,0 +1,361 @@
+{
+  "intents": [
+    {
+      "intent": "beställa",
+      "examples": [
+        {
+          "text": "beställa"
+        },
+        {
+          "text": "beställning"
+        },
+        {
+          "text": "jag vill beställa"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "okej",
+      "examples": [
+        {
+          "text": "ok"
+        }
+      ],
+      "description": ""
+    }
+  ],
+  "entities": [
+    {
+      "entity": "alternativ",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "ja",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "nej",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "pasta",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "alfredo",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "pasta",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "penne",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "spaghetti",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "Pizza",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "calzone",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "hawaii",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "inbakad",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "pizza",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "vesuvio",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "sallad",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "avocado",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "caesar",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "ost och skinka",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "räkor",
+          "synonyms": [
+            "räk",
+            "räksallad"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "sallad",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    }
+  ],
+  "metadata": {
+    "api_version": {
+      "major_version": "v2",
+      "minor_version": "2018-11-08"
+    }
+  },
+  "dialog_nodes": [
+    {
+      "type": "standard",
+      "title": "Anything else",
+      "output": {
+        "text": {
+          "values": [
+            "Jag förstod inte, tyvärr. Försök omformulera dig.",
+            "Kan du använda andra ord? Jag förstod inte.",
+            "Jag förstod inte vad du sa."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "conditions": "anything_else",
+      "dialog_node": "Anything else",
+      "previous_sibling": "node_1_1615215039286"
+    },
+    {
+      "type": "standard",
+      "title": "Beställa",
+      "output": {
+        "generic": []
+      },
+      "next_step": {
+        "behavior": "skip_user_input"
+      },
+      "conditions": "#beställa || @Pizza || @pasta || @sallad",
+      "dialog_node": "node_1_1591360570965",
+      "previous_sibling": "Welcome"
+    },
+    {
+      "type": "standard",
+      "title": "Väntar på dryck (Ja/Nej)",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Din beställning är nu genomförd. Smaklig måltid! "
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "context": {
+        "Drickasvar": "@alternativ.value"
+      },
+      "conditions": "@alternativ",
+      "dialog_node": "node_1_1615215039286",
+      "previous_sibling": "node_8_1615214207709"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Vad vill du beställa?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1591360570965",
+      "conditions": "anything_else",
+      "dialog_node": "node_2_1591360838970",
+      "previous_sibling": "node_2_1591361316079"
+    },
+    {
+      "type": "standard",
+      "title": "Pizza",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Du vill ha @Pizza? Du sa \"<? input.text ?>\". Jag är  till (<? T(Math).round(intents[0].confidence * 100) ?> %) säker att du menar beställa pizza."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1591360570965",
+      "context": {
+        "Mat": "@Pizza.value"
+      },
+      "conditions": "@Pizza",
+      "dialog_node": "node_2_1591361316079",
+      "previous_sibling": "node_7_1591361195880"
+    },
+    {
+      "type": "standard",
+      "title": "Sallad",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Stämmer det att du vill beställa en @sallad?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1591360570965",
+      "context": {
+        "Mat": "@sallad.value"
+      },
+      "conditions": "@sallad",
+      "dialog_node": "node_7_1591361195880",
+      "previous_sibling": "node_9_1591360689397"
+    },
+    {
+      "type": "standard",
+      "title": "Väntar på svar (Ja/Nej)",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "$Bekraftarsvar"
+              },
+              {
+                "text": ""
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          },
+          {
+            "values": [
+              {
+                "text": "Jag har beställt en  $Mat , vill du ha någon dricka till det? "
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "context": {
+        "Bekraftarsvar": "@alternativ.value"
+      },
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "user_input",
+        "dialog_node": "node_1_1615215039286"
+      },
+      "conditions": "@alternativ || #okej",
+      "digress_in": "does_not_return",
+      "dialog_node": "node_8_1615214207709",
+      "previous_sibling": "node_1_1591360570965"
+    },
+    {
+      "type": "standard",
+      "title": "Pasta",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Du vill beställa @pasta sa du?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1591360570965",
+      "context": {
+        "Mat": "@pasta.value"
+      },
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "user_input",
+        "dialog_node": "node_8_1615214207709"
+      },
+      "conditions": "@pasta",
+      "dialog_node": "node_9_1591360689397"
+    },
+    {
+      "type": "standard",
+      "title": "Välkommen",
+      "output": {
+        "text": {
+          "values": [
+            "Hej! Hur kan jag hjälpa dig?",
+            "Hej, vad vill du ha hjälp med? "
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "conditions": "welcome",
+      "dialog_node": "Welcome"
+    }
+  ],
+  "counterexamples": [],
+  "system_settings": {
+    "system_entities": {
+      "enabled": true
+    },
+    "spelling_auto_correct": false
+  },
+  "learning_opt_out": false,
+  "name": "Demo skill",
+  "language": "en",
+  "description": ""
+}
